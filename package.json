@@ -4,6 +4,7 @@
   "description": "A WebSocket server for wireless communication with Minecraft CC:Tweaked computers",
   "author": "StinkyHead",
   "scripts": {
+    "bundle": "mkdir -p dist && esbuild src/index.js --bundle --platform=node --target=node22 --format=cjs --outfile=dist/bundle.cjs",
     "sea": "node --experimental-sea-config sea-config.json"
   },
   "dependencies": {
