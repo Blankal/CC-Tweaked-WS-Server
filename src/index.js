@@ -2,7 +2,7 @@
 // between clients for a Minecraft CC:Tweaked server
 
 import WebSocket, { WebSocketServer } from "ws";
-import { registerClient, tunnelMessage } from "./serverUtils";
+import { registerClient, tunnelMessage } from "./serverUtils.js";
 
 const PORT = 8080; URL = `ws://localhost:${PORT}`;
 const wss = new WebSocketServer({ port: PORT });
