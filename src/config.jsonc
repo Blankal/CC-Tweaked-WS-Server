@@ -1,0 +1,5 @@
+{
+    "SERVER_PORT": 8080,  // Server port to listen on
+    "PING_INTERVAL": 5000,  // Interval to wait for before sending another ping to a client (in milliseconds)
+    "PING TIMEOUT": 10000  // Time to wait for a pong before terminating the client connection (in milliseconds)
+}

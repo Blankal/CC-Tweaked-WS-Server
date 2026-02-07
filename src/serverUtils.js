@@ -1,4 +1,4 @@
-// File for server-side utils/response components
+// File for server-side utils/response components intended for ComputerCraft: Tweaked WebSocket Server
 
 import WebSocket, { WebSocketServer } from "ws";
 
@@ -14,7 +14,7 @@ import WebSocket, { WebSocketServer } from "ws";
         "PAYLOAD":
         {
             "MESSAGE": "Client_ID"  // Can be any string except empty or "SERVER"
-        }}
+        }
     }
 
     Outgoing message format (on success):
@@ -36,7 +36,7 @@ import WebSocket, { WebSocketServer } from "ws";
 */
 export function registerClient(clients, ws, request)
 {
-    if (message.PROTOCOL === "REGISTER")
+    if (message.PROTOCOL === "REGISTER" && message.PAYLOAD.message !== "" && message.PAYLOAD.message !== "SERVER")
     {
         const id = request.PAYLOAD.MESSAGE;
         ws.id = id;
@@ -46,7 +46,7 @@ export function registerClient(clients, ws, request)
         {
             if (info.id === id)
             {
-                console.log(`Attempt to register with duplicate ID: ${id}`);
+                console.log(`Attempt to register with duplicate ID of : ${id} - Rejected`);
                 ws.send(JSON.stringify(
                     {
                         "PROTOCOL": "REQUEST_DENIED",
@@ -63,6 +63,67 @@ export function registerClient(clients, ws, request)
         console.log(`New client registered with ID: ${id}`);
     }
 }
+
+/*
+    Function to ping a client with a specified ID to check if they are still connected
+    @param clients - Map of connected clients
+    @param targetId - ID of client to ping
+    Expected message format:
+    {
+        "PROTOCOL": "PING",
+        "SENDER_ID": "ID of ponging client",
+        "PAYLOAD":
+        {
+            "TIME": "timestamp_of_ping"
+        }
+    }
+
+    Outgoing message format: // Note: Empty payload on purpose as client only needs to know that it recieved a ping
+    {                        // may be updates for peer to peer pings in the future using senderID
+        "PROTOCOL": "PING",
+        "PAYLOAD":
+        {
+            
+        }
+    }
+*/
+export function pingClient(clients, targetID)
+{
+    for(let [clientWs, info] of clients.entries())
+    {
+        if (info.id === targetID)
+        {
+            const pingMessage = {  // Initiate ping
+                "PROTOCOL": "PING",
+                "PAYLOAD":
+                {
+                    "TIME": Date.now()
+                }
+            }
+            clientWs.send(JSON.stringify(pingMessage));
+            return;
+        }
+    }
+}
+
+function getConnectedClients(clients, ws)
+{
+    const clientList = [];
+    for (let [clientWs, info] of clients.entries())
+    {
+        clientList.push(info.id);
+    }
+    ws.send(JSON.stringify(
+        {
+            "PROTOCOL": "GET_CLIENTS_RESPONSE",
+            "PAYLOAD":
+            {
+                "CLIENTS_LIST": clientList
+            }
+        }
+    ))
+}
+
 
 /*
     Function to broadcast a message to all connected clients
@@ -89,7 +150,7 @@ export function registerClient(clients, ws, request)
 export function broadcastToClients(clients, message)
 {
     clients.array.forEach(element => {
-        sendToClient(element, JSON.stringify(message));
+        sendToClient(element, JSON.stringify(message));  // WIP - may need to be altered to fit message structure and permissions
     });
 }
 
