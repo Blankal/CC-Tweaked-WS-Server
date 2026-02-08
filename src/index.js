@@ -4,7 +4,7 @@
 import WebSocket, { WebSocketServer } from "ws";
 import { registerClient, tunnelMessage, broadcastToClients } from "./serverUtils.js";
 
-import config from "./config.json" assert { type: "jsonc" };  // load config
+import config from "./config.json" assert { type: "json" };  // load config
 const { SERVER_PORT, PING_INTERVAL, PING_TIMEOUT } = config;  // Grab specific config values
 
 const PORT = SERVER_PORT; URL = `ws://localhost:${PORT}`;
