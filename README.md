@@ -6,11 +6,11 @@ Currently supports:
   - User registration
   - Payload/message tunneling between clients
   - Payload/message broadcasting between clients
-  - Requests from server
+  - Requests to server
 
 Future additions:
-  - Basic WAN access via NGROK
+  - Different request types
 
 Usage:
   - Pull, maybe adjust port and run
-  - You will need something that allows you to expose your computer to the WAN like NGROK or Port Forwarding
+  - You will need something that allows you to expose your computer to the WAN like NGROK or Port Forwarding or tailscale
